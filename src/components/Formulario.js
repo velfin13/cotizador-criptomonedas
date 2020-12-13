@@ -23,7 +23,7 @@ const Boton = styled.input`
   }
 `;
 
-export const Formulario = () => {
+export const Formulario = ({ guardarCriptomoneda, guardarMoneda }) => {
   //state para listar lascriptomonedas
   const [listacripto, guardarlistacripto] = useState([]);
 
@@ -75,6 +75,8 @@ export const Formulario = () => {
     //si pasa la validacion
     guardarError(false);
     //enviar los datos al componente principal
+    guardarMoneda(moneda);
+    guardarCriptomoneda(criptomoneda);
   };
 
   return (
