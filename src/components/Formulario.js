@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import { useMoneda } from "../hooks/useMoneda";
 import { useCriptomoneda } from "../hooks/useCriptomoneda";
 import axios from "axios";
+import { Error } from "./Error";
 
 const Boton = styled.input`
   margin-top: 20px;
@@ -23,9 +24,11 @@ const Boton = styled.input`
 `;
 
 export const Formulario = () => {
-
   //state para listar lascriptomonedas
   const [listacripto, guardarlistacripto] = useState([]);
+
+  //state error
+  const [error, guardarError] = useState(false);
 
   //utilizamos el hook criptomoneda
   const [criptomoneda, SelectCriptomoneda] = useCriptomoneda(
@@ -59,12 +62,24 @@ export const Formulario = () => {
     consultarAPI();
   }, []);
 
+  //cuando el usuario hace el submit
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    //validar
+    if (criptomoneda === "" || moneda === "") {
+      guardarError(true);
+      return;
+    }
+
+    //si pasa la validacion
+    guardarError(false);
+    //enviar los datos al componente principal
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {error ? <Error mensaje="Hay campos vacios" /> : null}
       <SelectMonedas />
       <SelectCriptomoneda />
       <Boton type="submit" value="Calcular" />
