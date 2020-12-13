@@ -4,6 +4,7 @@ import axios from "axios";
 import imagen from "./cryptomonedas.png";
 import { Formulario } from "./components/Formulario";
 import { Resultado } from "./components/Resultado";
+import { Speaner } from "./components/Speaner";
 
 const Contenedor = styled.div`
   max-width: 900px;
@@ -45,6 +46,9 @@ export const App = () => {
   //state para guardar el resultado de la cotizacion
   const [resultado, guardarResultado] = useState({});
 
+  //state cargando
+  const [cargando, setcargando] = useState(false);
+
   useEffect(() => {
     const CotizarCriptomoneda = async () => {
       //prevenir que se ejecute
@@ -53,10 +57,19 @@ export const App = () => {
       const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
       const resultado = await axios.get(url);
 
-      guardarResultado(resultado.data.DISPLAY[criptomoneda][moneda]);
+      //mostrando el cargando
+      setcargando(true);
+
+      setTimeout(() => {
+        //quitando el cargando
+        setcargando(false);
+        guardarResultado(resultado.data.DISPLAY[criptomoneda][moneda]);
+      }, 3000);
     };
     CotizarCriptomoneda();
   }, [criptomoneda, moneda]);
+
+  let compomente = cargando ? <Speaner /> : <Resultado resultado={resultado} />;
 
   return (
     <Contenedor>
@@ -69,7 +82,7 @@ export const App = () => {
           guardarCriptomoneda={guardarCriptomoneda}
           guardarMoneda={guardarMoneda}
         />
-        <Resultado resultado={resultado} />
+        {compomente}
       </div>
     </Contenedor>
   );
